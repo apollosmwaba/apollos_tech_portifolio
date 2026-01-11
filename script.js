@@ -1,6 +1,26 @@
 
       /* Toggle Style Switcher */
 
+      // Loader functionality
+      window.addEventListener('load', function() {
+        // Add loading class to body initially
+        document.body.classList.add('loading');
+        
+        // Simulate loading time (2-3 seconds)
+        setTimeout(function() {
+          const loader = document.getElementById('loader');
+          document.body.classList.remove('loading');
+          loader.classList.add('fade-out');
+          
+          // Remove loader from DOM after fade out
+          setTimeout(function() {
+            loader.style.display = 'none';
+          }, 500);
+        }, 2500); // 2.5 seconds loading time
+      });
+
+      /* Toggle Style Switcher */
+
       const styleSwitcherToggle = document.querySelector(
         ".style-switcher-toggler"
       );
@@ -150,6 +170,59 @@
       // Initialize EmailJS
       emailjs.init("xwlf4-igwu2AzvJ8x"); // Replace with your EmailJS public key
 
+      // Google Analytics Event Tracking
+      function trackEvent(action, category, label) {
+        if (typeof gtag !== 'undefined') {
+          gtag('event', action, {
+            'event_category': category,
+            'event_label': label
+          });
+        }
+      }
+
+      // Track navigation clicks
+      const navLinks = document.querySelectorAll('.nav a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          const section = this.getAttribute('href').replace('#', '');
+          trackEvent('navigation_click', 'Navigation', section);
+        });
+      });
+
+      // Track hire me button clicks
+      const hireMeButtons = document.querySelectorAll('.hire-me');
+      hireMeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          trackEvent('cta_click', 'Call to Action', 'Hire Me Button');
+        });
+      });
+
+      // Track project link clicks
+      const projectLinks = document.querySelectorAll('.portfolio a');
+      projectLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          trackEvent('project_click', 'Portfolio', 'Project Link');
+        });
+      });
+
+      // Track theme changes
+      const colorSwitchers = document.querySelectorAll('.colors span');
+      colorSwitchers.forEach(switcher => {
+        switcher.addEventListener('click', function() {
+          const colorClass = this.className;
+          trackEvent('theme_change', 'Customization', colorClass);
+        });
+      });
+
+      // Track dark/light mode toggle
+      const dayNightToggle = document.querySelector('.day-night');
+      if (dayNightToggle) {
+        dayNightToggle.addEventListener('click', function() {
+          const mode = document.body.classList.contains('dark') ? 'light' : 'dark';
+          trackEvent('mode_toggle', 'Customization', mode + '_mode');
+        });
+      }
+
       document.getElementById("contactForm").addEventListener("submit", function(e) {
         e.preventDefault();
         
@@ -164,6 +237,9 @@
         emailjs.sendForm('service_tvlo3gs', 'template_40ennbh', this)
           .then(function(response) {
             console.log('SUCCESS!', response.status, response.text);
+            
+            // Track successful form submission
+            trackEvent('form_submit', 'Contact', 'Success');
             
             // Show success message
             submitBtn.textContent = 'Message Sent!';
@@ -181,6 +257,9 @@
             
           }, function(error) {
             console.log('FAILED...', error);
+            
+            // Track failed form submission
+            trackEvent('form_submit', 'Contact', 'Failed');
             
             // Show error message
             submitBtn.textContent = 'Failed to send';
