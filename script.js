@@ -68,10 +68,10 @@
 
       var typed = new Typed(".typing", {
         strings: [
-          "Computer Scientist",
+          "Computer Science Graduate",
           "Software Engineer", 
           "Web Developer",
-          "Tech Enthusiast",
+          "Tech Professional",
           "",
         ],
         typeSpeed: 100,
